@@ -1,6 +1,6 @@
 package etf.iot.cloud.platform.services.services.impl;
 
-import etf.iot.cloud.platform.services.model.Device;
+import etf.iot.cloud.platform.services.dto.Device;
 import etf.iot.cloud.platform.services.security.JwtUtil;
 import etf.iot.cloud.platform.services.services.AuthService;
 import etf.iot.cloud.platform.services.services.DeviceService;
@@ -44,11 +44,12 @@ public class AuthServiceImpl implements AuthService {
         }
     }
     @Override
-    public String register(String username, String password) {
+    public String register(String username, String password,String time_format) {
         //create new device
         Device device=new Device();
         device.setUsername(username);
         device.setPassword(password);
+        device.setTimeFormat(time_format);
         device=deviceService.createDevice(device);
         //if already registered device try to register again, device wont be created again,
         // just login will be executed (if provided password is correct)

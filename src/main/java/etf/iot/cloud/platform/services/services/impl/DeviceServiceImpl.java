@@ -1,8 +1,10 @@
 package etf.iot.cloud.platform.services.services.impl;
 
 import etf.iot.cloud.platform.services.dao.DeviceDao;
-import etf.iot.cloud.platform.services.model.Device;
+import etf.iot.cloud.platform.services.dto.Device;
+import etf.iot.cloud.platform.services.model.DeviceEntity;
 import etf.iot.cloud.platform.services.services.DeviceService;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,29 +12,34 @@ import org.springframework.stereotype.Service;
 @Service
 public class DeviceServiceImpl implements DeviceService {
     private final DeviceDao deviceDao;
+    private final ModelMapper modelMapper;
+
     private final BCryptPasswordEncoder encoder;
 
-    public DeviceServiceImpl(DeviceDao deviceDao) {
+    public DeviceServiceImpl(DeviceDao deviceDao, ModelMapper modelMapper) {
         this.deviceDao = deviceDao;
+        this.modelMapper = modelMapper;
         this.encoder = new BCryptPasswordEncoder();
     }
 
     @Override
     public Device loadUserByUsername(String username) throws UsernameNotFoundException {
-        Device device = deviceDao.findDeviceByUsername(username);
+        DeviceEntity device = deviceDao.findDeviceByUsername(username);
         if (device != null)
-            return device;
+            return modelMapper.map(device,Device.class);
         else
             throw new UsernameNotFoundException(username);
     }
 
     public Device createDevice(Device device) {
         //check if device with specified name already exists
-        Device temp = deviceDao.findDeviceByUsername(device.getUsername());
+        DeviceEntity temp = deviceDao.findDeviceByUsername(device.getUsername());
         if (temp == null) {
             //create device's password hash
             device.setPassword(encoder.encode(device.getPassword()));
-            device = deviceDao.saveAndFlush(device);
+            DeviceEntity entity=modelMapper.map(device,DeviceEntity.class);
+            entity = deviceDao.saveAndFlush(entity);
+            device.setId(entity.getId());
             return device;
         } else return null;
     }

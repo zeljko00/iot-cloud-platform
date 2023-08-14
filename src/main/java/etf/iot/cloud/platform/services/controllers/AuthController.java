@@ -13,11 +13,9 @@ import java.util.Base64;
 @RequestMapping("/auth")
 public class AuthController {
     private final Base64.Decoder decoder=Base64.getDecoder();
-    private final DeviceService deviceService;
     private final AuthService authService;
 
-    public AuthController(DeviceService deviceService, AuthService authService) {
-        this.deviceService = deviceService;
+    public AuthController(AuthService authService) {
         this.authService = authService;
     }
 
@@ -41,8 +39,8 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> register(@RequestParam("username") String username,@RequestParam("password") String password) {
-        String jwt=authService.register(username,password);
+    public ResponseEntity<String> register(@RequestParam("username") String username,@RequestParam("password") String password,@RequestParam("time_format") String time_format) {
+        String jwt=authService.register(username,password,time_format);
         if (jwt!=null)
             return new ResponseEntity<>(jwt, HttpStatus.OK);
         else

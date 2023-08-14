@@ -1,4 +1,4 @@
-package etf.iot.cloud.platform.services.model;
+package etf.iot.cloud.platform.services.dto;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,14 +16,11 @@ import java.util.Collections;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 public class Device implements UserDetails {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
     private String password;
-
+    private String timeFormat;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.emptyList();
