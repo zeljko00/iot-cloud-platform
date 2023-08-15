@@ -16,7 +16,7 @@ public class DataEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private double value;
-    private Date measured;
+    private Date time;
     @Enumerated(EnumType.STRING)
     private DataType type;
     @Enumerated(EnumType.STRING)

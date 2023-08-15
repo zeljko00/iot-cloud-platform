@@ -1,5 +1,7 @@
 package etf.iot.cloud.platform.services.services.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import etf.iot.cloud.platform.services.dto.Data;
 import etf.iot.cloud.platform.services.dto.Device;
 import etf.iot.cloud.platform.services.security.JwtUtil;
 import etf.iot.cloud.platform.services.services.AuthService;

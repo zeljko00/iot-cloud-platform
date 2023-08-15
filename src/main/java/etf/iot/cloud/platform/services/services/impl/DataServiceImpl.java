@@ -33,8 +33,8 @@ public class DataServiceImpl implements DataService {
     }
 
     public void receive(Data data) {
-        String time = data.getMeasured();
-        data.setMeasured(null);
+        String time = data.getTime();
+        data.setTime(null);
         DataEntity entity = modelMapper.map(data, DataEntity.class);
         DataUnit unit = DataUnit.Unknown;
         try {
@@ -49,10 +49,10 @@ public class DataServiceImpl implements DataService {
         Device device = (Device) authentication.getPrincipal();
         try {
             DateFormat dateFormat = new SimpleDateFormat(device.getTimeFormat());
-            entity.setMeasured(dateFormat.parse(time));
+            entity.setTime(dateFormat.parse(time));
         } catch (Exception e) {
             e.printStackTrace();
-            entity.setMeasured(new Date());
+            entity.setTime(new Date());
         }
         DeviceEntity deviceEntity = deviceDao.findById(device.getId()).get();
         entity.setDevice(deviceEntity);
