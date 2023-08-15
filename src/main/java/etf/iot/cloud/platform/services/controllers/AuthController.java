@@ -2,6 +2,7 @@ package etf.iot.cloud.platform.services.controllers;
 
 import etf.iot.cloud.platform.services.services.AuthService;
 import etf.iot.cloud.platform.services.services.DeviceService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +13,11 @@ import java.util.Base64;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-    private final Base64.Decoder decoder=Base64.getDecoder();
+    private final Base64.Decoder decoder = Base64.getDecoder();
     private final AuthService authService;
+
+    @Value("${api.key}")
+    private String apiKey;
 
     public AuthController(AuthService authService) {
         this.authService = authService;
@@ -31,19 +35,21 @@ public class AuthController {
         String password = tokens[1];
 
         //authenticate device
-        String jwt=authService.login(username,password);
-        if (jwt!=null)
+        String jwt = authService.login(username, password);
+        if (jwt != null)
             return new ResponseEntity<>(jwt, HttpStatus.OK);
         else
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> register(@RequestParam("username") String username,@RequestParam("password") String password,@RequestParam("time_format") String time_format) {
-        String jwt=authService.register(username,password,time_format);
-        if (jwt!=null)
-            return new ResponseEntity<>(jwt, HttpStatus.OK);
-        else
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<String> register(@RequestHeader(HttpHeaders.AUTHORIZATION) String key, @RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("time_format") String time_format) {
+        // allow signup only for devices that have valid api key
+        if (apiKey.equals(key)) {
+            String jwt = authService.register(username, password, time_format);
+            if (jwt != null)
+                return new ResponseEntity<>(jwt, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 }
