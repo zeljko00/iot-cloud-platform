@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Component
 public class JwtUtil {
-    public static final long JWT_VALIDITY = 5 * 60 * 60;    //validity period for jwt
+    public static final long JWT_VALIDITY = 15 * 60 * 60;    //validity period for jwt
     @Value("${jwt.secretKey}")
     private String secretKey; // reading secret key needed for digital signature of jwt, from application.properties file
 

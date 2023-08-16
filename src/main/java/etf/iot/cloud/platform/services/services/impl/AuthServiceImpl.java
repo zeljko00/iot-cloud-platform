@@ -1,11 +1,10 @@
 package etf.iot.cloud.platform.services.services.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import etf.iot.cloud.platform.services.dto.Data;
 import etf.iot.cloud.platform.services.dto.Device;
 import etf.iot.cloud.platform.services.security.JwtUtil;
 import etf.iot.cloud.platform.services.services.AuthService;
 import etf.iot.cloud.platform.services.services.DeviceService;
+import etf.iot.cloud.platform.services.util.LoggerBean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,13 +15,15 @@ public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final LoggerBean loggerBean;
     private final DeviceService deviceService;
 
 
-    public AuthServiceImpl(AuthenticationManager authenticationManager, DeviceService deviceService, JwtUtil jwtUtil) {
+    public AuthServiceImpl(AuthenticationManager authenticationManager, DeviceService deviceService, JwtUtil jwtUtil, LoggerBean loggerBean) {
         this.authenticationManager = authenticationManager;
         this.deviceService = deviceService;
         this.jwtUtil = jwtUtil;
+        this.loggerBean = loggerBean;
     }
 
     @Override
@@ -42,6 +43,7 @@ public class AuthServiceImpl implements AuthService {
             return jwtUtil.generateToken(device);
         } catch (Exception e) {
             e.printStackTrace();
+            loggerBean.logError(e);
             return null;
         }
     }

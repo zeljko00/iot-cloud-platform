@@ -9,6 +9,7 @@ import etf.iot.cloud.platform.services.enums.DataUnit;
 import etf.iot.cloud.platform.services.model.DataEntity;
 import etf.iot.cloud.platform.services.model.DeviceEntity;
 import etf.iot.cloud.platform.services.services.DataService;
+import etf.iot.cloud.platform.services.util.LoggerBean;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -24,11 +25,13 @@ public class DataServiceImpl implements DataService {
 
     private final DataDao dataDao;
     private final ModelMapper modelMapper;
+    private final LoggerBean loggerBean;
     private final DeviceDao deviceDao;
 
-    public DataServiceImpl(DataDao dataDao, ModelMapper modelMapper, DeviceDao deviceDao) {
+    public DataServiceImpl(DataDao dataDao, ModelMapper modelMapper, LoggerBean loggerBean, DeviceDao deviceDao) {
         this.dataDao = dataDao;
         this.modelMapper = modelMapper;
+        this.loggerBean = loggerBean;
         this.deviceDao = deviceDao;
     }
 
@@ -41,6 +44,7 @@ public class DataServiceImpl implements DataService {
             unit = DataUnit.valueOf(data.getUnit());
         } catch (Exception e) {
             e.printStackTrace();
+            loggerBean.logError(e);
         }
         entity.setUnit(unit);
         entity.setType(DataType.valueOf(data.getType()));
@@ -52,6 +56,7 @@ public class DataServiceImpl implements DataService {
             entity.setTime(dateFormat.parse(time));
         } catch (Exception e) {
             e.printStackTrace();
+            loggerBean.logError(e);
             entity.setTime(new Date());
         }
         DeviceEntity deviceEntity = deviceDao.findById(device.getId()).get();
