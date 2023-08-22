@@ -41,6 +41,11 @@ public class AuthController {
         else
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
+    // used for checking whether jwt has expired
+    @GetMapping("/jwt-check")
+    public ResponseEntity<String> checkJwt() {
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     @PostMapping("/signup")
     public ResponseEntity<String> register(@RequestHeader(HttpHeaders.AUTHORIZATION) String key, @RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("time_format") String time_format) {
