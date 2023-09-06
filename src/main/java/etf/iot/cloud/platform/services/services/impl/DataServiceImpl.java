@@ -15,6 +15,7 @@ import etf.iot.cloud.platform.services.model.DeviceEntity;
 import etf.iot.cloud.platform.services.services.DataService;
 import etf.iot.cloud.platform.services.util.LoggerBean;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -37,6 +38,8 @@ public class DataServiceImpl implements DataService {
     private final DeviceDao deviceDao;
     private final SimpMessagingTemplate simpMessageTemplate;
     private final Gson gson = new Gson();
+    @Value("${history}")
+    private String historyInHrs;
     private final DateFormat dateFormater=new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
     public DataServiceImpl(DataDao dataDao, StatsDao statsDao, ModelMapper modelMapper, LoggerBean loggerBean, DeviceDao deviceDao, SimpMessagingTemplate simpMessageTemplate) {
@@ -86,7 +89,14 @@ public class DataServiceImpl implements DataService {
         Date date=new Date();
         Calendar calendar=Calendar.getInstance();
         calendar.setTime(date);
-        calendar.add(Calendar.DATE,-1);
+        int hrs=-1;
+        try{
+            hrs=Integer.parseInt(historyInHrs)*(-1);
+        }catch (Exception e){
+            e.printStackTrace();
+            loggerBean.logError(e);
+        }
+        calendar.add(Calendar.DATE,hrs);
         DeviceData deviceData=new DeviceData();
         deviceData.setTemperatureData(dataDao.getAllByDeviceIdAndTypeAndTimeAfter(id,DataType.TEMPERATURE,calendar.getTime()).stream().map( entity -> {
             Data data=new Data();
