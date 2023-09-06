@@ -54,6 +54,7 @@ public class WebSecurityConfiguration {
                 .exceptionHandling(eh -> eh.authenticationEntryPoint(authenticationEntryPoint))
                 .authorizeHttpRequests(ar -> ar.requestMatchers(HttpMethod.GET,"/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST,"/auth/signup").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/ws/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)

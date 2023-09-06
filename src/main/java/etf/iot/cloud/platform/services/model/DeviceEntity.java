@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@ToString(exclude = "data")
+@ToString(exclude = {"data", "stats"})
 public class DeviceEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,4 +26,6 @@ public class DeviceEntity {
     private String timeFormat;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "device")
     private List<DataEntity> data;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "device")
+    private List<StatsEntity> stats;
 }
