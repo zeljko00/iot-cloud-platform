@@ -1,5 +1,6 @@
 package etf.iot.cloud.platform.services.services.impl;
 
+import etf.iot.cloud.platform.services.dao.DeviceDao;
 import etf.iot.cloud.platform.services.dao.StatsDao;
 import etf.iot.cloud.platform.services.dto.Device;
 import etf.iot.cloud.platform.services.dto.Stats;
@@ -19,11 +20,13 @@ import java.text.SimpleDateFormat;
 public class StatsServiceImpl implements StatsService {
 
     private final StatsDao statsDao;
+    private final DeviceDao deviceDao;
     private final ModelMapper modelMapper;
     private final LoggerBean loggerBean;
 
-    public StatsServiceImpl(StatsDao statsDao, ModelMapper modelMapper, LoggerBean loggerBean) {
+    public StatsServiceImpl(StatsDao statsDao, DeviceDao deviceDao, ModelMapper modelMapper, LoggerBean loggerBean) {
         this.statsDao = statsDao;
+        this.deviceDao = deviceDao;
         this.modelMapper = modelMapper;
         this.loggerBean = loggerBean;
     }
@@ -39,6 +42,7 @@ public class StatsServiceImpl implements StatsService {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         Device device = (Device) authentication.getPrincipal();
+
         try{
             DateFormat dateFormat = new SimpleDateFormat(device.getTimeFormat());
             statsEntity.setStartTime(dateFormat.parse(from));
@@ -47,6 +51,7 @@ public class StatsServiceImpl implements StatsService {
             e.printStackTrace();
             loggerBean.logError(e);
         }
+        statsEntity.setDevice(deviceDao.findDeviceByUsername(device.getUsername()));
         statsDao.saveAndFlush(statsEntity);
     }
 }
