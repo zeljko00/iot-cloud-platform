@@ -96,7 +96,7 @@ public class DataServiceImpl implements DataService {
             e.printStackTrace();
             loggerBean.logError(e);
         }
-        calendar.add(Calendar.DATE,hrs);
+        calendar.add(Calendar.HOUR_OF_DAY,hrs);
         DeviceData deviceData=new DeviceData();
         deviceData.setTemperatureData(dataDao.getAllByDeviceIdAndTypeAndTimeAfter(id,DataType.TEMPERATURE,calendar.getTime()).stream().map( entity -> {
             Data data=new Data();
