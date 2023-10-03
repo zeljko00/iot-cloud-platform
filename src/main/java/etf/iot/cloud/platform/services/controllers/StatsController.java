@@ -3,6 +3,7 @@ package etf.iot.cloud.platform.services.controllers;
 import etf.iot.cloud.platform.services.dto.Device;
 import etf.iot.cloud.platform.services.dto.Stats;
 import etf.iot.cloud.platform.services.services.StatsService;
+import etf.iot.cloud.platform.services.util.Constants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -24,7 +25,7 @@ public class StatsController {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         Device device = (Device) authentication.getPrincipal();
-        System.out.println("Device: "+device.getId()+" - Received stats data!");
+        System.out.println(Constants.ANSI_BLUE+"Device: "+device.getId()+" - Received stats data!"+ Constants.ANSI_RESET);
         statsService.receive(stats);
         return new ResponseEntity<>(HttpStatus.OK);
     }

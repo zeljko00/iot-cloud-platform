@@ -1,18 +1,14 @@
 package etf.iot.cloud.platform.services.controllers;
 
-import etf.iot.cloud.platform.services.dto.Device;
 import etf.iot.cloud.platform.services.services.AuthService;
-import etf.iot.cloud.platform.services.services.DeviceService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
+import etf.iot.cloud.platform.services.util.Constants;
 
 @RestController
 @RequestMapping("/auth")
@@ -37,15 +33,15 @@ public class AuthController {
         tokens = credentials.split(":");
         String username = tokens[0];
         String password = tokens[1];
-        System.out.println("Device: "+username+" - Sign in request!");
+        System.out.println(Constants.ANSI_BLUE+"Device: "+username+" - Sign in request!"+Constants.ANSI_RESET);
         //authenticate device
         String jwt = authService.login(username, password);
         if (jwt != null){
-            System.out.println("Device: "+username+" - Successful sign in!");
+            System.out.println(Constants.ANSI_GREEN+"Device: "+username+" - Successful sign in!"+Constants.ANSI_RESET);
             return new ResponseEntity<>(jwt, HttpStatus.OK);
         }
         else{
-            System.out.println("Device: "+username+" - Sign in failed");
+            System.out.println(Constants.ANSI_RED+"Device: "+username+" - Sign in failed"+Constants.ANSI_RESET);
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
@@ -58,15 +54,15 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<String> register(@RequestHeader(HttpHeaders.AUTHORIZATION) String key, @RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("time_format") String time_format) {
         // allow signup only for devices that have valid api key
-        System.out.println("Device: "+username+" - Sign up request!");
+        System.out.println(Constants.ANSI_BLUE+"Device: "+username+" - Sign up request!"+Constants.ANSI_RESET);
         if (apiKey.equals(key)) {
             String jwt = authService.register(username, password, time_format);
             if (jwt != null)
                 return new ResponseEntity<>(jwt, HttpStatus.OK);
         }
         else
-            System.out.println("Device: "+username+" - Invalid API key!");
-        System.out.println("Device: "+username+" - Sign up failed!");
+            System.out.println(Constants.ANSI_RED+"Device: "+username+" - Invalid API key!"+Constants.ANSI_RESET);
+        System.out.println(Constants.ANSI_RED+"Device: "+username+" - Sign up failed!"+Constants.ANSI_RESET);
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 }

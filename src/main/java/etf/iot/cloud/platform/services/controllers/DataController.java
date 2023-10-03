@@ -5,6 +5,7 @@ import etf.iot.cloud.platform.services.dto.Device;
 import etf.iot.cloud.platform.services.dto.DeviceData;
 import etf.iot.cloud.platform.services.enums.DataType;
 import etf.iot.cloud.platform.services.services.DataService;
+import etf.iot.cloud.platform.services.util.Constants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -26,7 +27,7 @@ public class DataController {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         Device device = (Device) authentication.getPrincipal();
-        System.out.println("**** Device: "+device.getId()+" - Received temperature data: "+data.getValue()+data.getUnit()+" ["+data.getTime()+"] ****");
+        System.out.println(Constants.ANSI_PURPLE+"**** Device: "+device.getId()+" - Received temperature data: "+data.getValue()+data.getUnit()+" ["+data.getTime()+"] ****"+Constants.ANSI_RESET);
         data.setType(DataType.TEMPERATURE.name());
         dataService.receive(data);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -37,7 +38,7 @@ public class DataController {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         Device device = (Device) authentication.getPrincipal();
-        System.out.println("++++ Device: "+device.getId()+" - Received load data: "+data.getValue()+data.getUnit()+" ["+data.getTime()+"] ++++");
+        System.out.println(Constants.ANSI_YELLOW+"++++ Device: "+device.getId()+" - Received load data: "+data.getValue()+data.getUnit()+" ["+data.getTime()+"] ++++"+ Constants.ANSI_RESET);
         data.setType(DataType.LOAD.name());
         dataService.receive(data);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -47,7 +48,7 @@ public class DataController {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         Device device = (Device) authentication.getPrincipal();
-        System.out.println("---- Device: "+device.getId()+" - Received fuel data: "+data.getValue()+data.getUnit()+" ["+data.getTime()+"] ----");
+        System.out.println(Constants.ANSI_CYAN+"---- Device: "+device.getId()+" - Received fuel data: "+data.getValue()+data.getUnit()+" ["+data.getTime()+"] ----"+Constants.ANSI_RESET);
         data.setType(DataType.FUEL_LEVEL.name());
         dataService.receive(data);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -57,7 +58,7 @@ public class DataController {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         Device device = (Device) authentication.getPrincipal();
-        System.out.println("Device: "+device.getId()+" - Device data request!");
+        System.out.println(Constants.ANSI_BLUE+"Device: "+device.getId()+" - Device data request!"+Constants.ANSI_RESET);
         return new ResponseEntity<>(dataService.deviceData(device.getId()),HttpStatus.OK);
     }
 }

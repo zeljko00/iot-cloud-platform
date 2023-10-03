@@ -1,5 +1,6 @@
 package etf.iot.cloud.platform.services.security;
 
+import etf.iot.cloud.platform.services.util.Constants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -35,7 +36,7 @@ public class JwtUtil {
             Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
             return claims;
         } catch (Exception e) {
-            System.out.println("JWT changed or signed with different key!");
+            System.out.println(Constants.ANSI_RED+"JWT changed or signed with different key!"+ Constants.ANSI_RESET);
             throw e;
         }
     }
@@ -43,7 +44,7 @@ public class JwtUtil {
     private Boolean isTokenExpired(String token) {       //check if the token has expired
         boolean expired=getExpirationDateFromToken(token).before(new Date());
         if(expired)
-            System.out.println("Token expired!");
+            System.out.println(Constants.ANSI_RED+"Token expired!"+Constants.ANSI_RESET);
         return  expired;
     }
 
