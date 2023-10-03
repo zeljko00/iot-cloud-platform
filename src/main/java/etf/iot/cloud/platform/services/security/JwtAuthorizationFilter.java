@@ -35,7 +35,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         //checks whether request contains jwt
         if (tokenHeader != null && tokenHeader.startsWith("Bearer ")) {
             //request contains token
-            System.out.println("Token: "+tokenHeader);
+            System.out.println("Received JWT token!");
             //getting rid of "Bearer " prefix
             String token = tokenHeader.substring(7);
             try {
@@ -43,8 +43,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 if (username!=null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     //gathering information about user
                     UserDetails userDetails = deviceService.loadUserByUsername(username);
-                    System.out.println(userDetails.getAuthorities());
-                    System.out.println("Username :"+username);
                     // checking token validity
                     if (jwtUtil.validateToken(token, userDetails)) {
                         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
@@ -63,7 +61,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         else
             System.out.println("Request does not contain JWT token!");
 
-        System.out.println("Continue with filter chain!!!!!!!!");
         filterChain.doFilter(request, response);
     }
 }

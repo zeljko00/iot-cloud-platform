@@ -35,8 +35,7 @@ public class JwtUtil {
             Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
             return claims;
         } catch (Exception e) {
-            System.out.println("Error while getting claims from jwt - jwt probably changed or signed with different key!");
-            e.printStackTrace();
+            System.out.println("JWT changed or signed with different key!");
             throw e;
         }
     }

@@ -79,7 +79,6 @@ public class DataServiceImpl implements DataService {
         }
         DeviceEntity deviceEntity = deviceDao.findById(device.getId()).get();
         entity.setDevice(deviceEntity);
-        System.out.println(entity);
         dataDao.saveAndFlush(entity);
         simpMessageTemplate.convertAndSendToUser(device.getUsername(), entity.getType().name().toLowerCase(), gson.toJson(data,Data.class));
     }

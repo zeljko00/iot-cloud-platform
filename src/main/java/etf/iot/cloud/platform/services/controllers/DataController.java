@@ -23,6 +23,10 @@ public class DataController {
 
     @PostMapping("/temp")
     public ResponseEntity<?> temperature(@RequestBody Data data){
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
+        Device device = (Device) authentication.getPrincipal();
+        System.out.println("**** Device: "+device.getId()+" - Received temperature data: "+data.getValue()+data.getUnit()+" ["+data.getTime()+"] ****");
         data.setType(DataType.TEMPERATURE.name());
         dataService.receive(data);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -30,12 +34,20 @@ public class DataController {
 
     @PostMapping("/load")
     public ResponseEntity<?> load(@RequestBody Data data){
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
+        Device device = (Device) authentication.getPrincipal();
+        System.out.println("++++ Device: "+device.getId()+" - Received load data: "+data.getValue()+data.getUnit()+" ["+data.getTime()+"] ++++");
         data.setType(DataType.LOAD.name());
         dataService.receive(data);
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @PostMapping("/fuel")
     public ResponseEntity<?> fuel(@RequestBody Data data){
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
+        Device device = (Device) authentication.getPrincipal();
+        System.out.println("---- Device: "+device.getId()+" - Received fuel data: "+data.getValue()+data.getUnit()+" ["+data.getTime()+"] ----");
         data.setType(DataType.FUEL_LEVEL.name());
         dataService.receive(data);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -45,6 +57,7 @@ public class DataController {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         Device device = (Device) authentication.getPrincipal();
+        System.out.println("Device: "+device.getId()+" - Device data request!");
         return new ResponseEntity<>(dataService.deviceData(device.getId()),HttpStatus.OK);
     }
 }
