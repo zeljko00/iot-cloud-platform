@@ -17,21 +17,39 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+/**
+ * Class that contains Spring security configuration
+ */
 @EnableWebSecurity   // includes our custom security configuration into spring security configuration
 @Configuration       // marks our class as configuration class
 public class WebSecurityConfiguration {
-
-
-    // authorization filter that validates received requests
+    /**
+     * authorization filter that validates received requests
+     */
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
-    // takes care of requests which failed validation
+    /**
+     * takes care of requests which failed authentication process
+     */
     private final JwtAuthenticationEntryPoint authenticationEntryPoint;
 
+    /**
+     * Class constructor
+     *
+     * @param jwtAuthorizationFilter user defined jwt auth filter
+     * @param authenticationEntryPoint  auth entry point
+     */
     public WebSecurityConfiguration( JwtAuthorizationFilter jwtAuthorizationFilter, JwtAuthenticationEntryPoint authenticationEntryPoint) {
         this.jwtAuthorizationFilter = jwtAuthorizationFilter;
         this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
+    /**
+     * Bean responsible for handling auth process
+     *
+     * @param authenticationConfiguration config object
+     * @return AuthenticationManager
+     * @throws Exception
+     */
     //interface declaring authenticate()  method, which accepts or rejects request depending on success of authentication
     @Bean
     public AuthenticationManager authenticationManager(
@@ -39,12 +57,24 @@ public class WebSecurityConfiguration {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    /** Bean used for creating password's hash value
+     *
+     * @return password encoder object
+     */
+
     // bean that provides password hashing and encoding
     @Bean
     public PasswordEncoder passwordEncoder() {      //service that provides password encryption and encoding
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Configuring session management, protected URLs, filters and exception handling
+     *
+     * @param http Spring security config object
+     * @return spring security filter chain
+     * @throws Exception
+     */
     //declaring rules for accessing api
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -78,6 +108,11 @@ public class WebSecurityConfiguration {
 //        return registry.anyRequest().authenticated().and();
 //    }
 
+    /**
+     * Configuring cors filter for incoming requests
+     *
+     * @return CorsFilter
+     */
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source =

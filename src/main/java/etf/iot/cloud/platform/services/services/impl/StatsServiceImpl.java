@@ -16,12 +16,28 @@ import org.springframework.stereotype.Service;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+/**
+ * Implementation of StatsService
+ *
+ * Provides functionalities for receiving and storing iot gateway stats data
+ */
 @Service
 public class StatsServiceImpl implements StatsService {
-
+    /**
+     *  Dao object for stats entity manipulation
+     */
     private final StatsDao statsDao;
+    /**
+     *  Dao object for iot gateway account entity manipulation
+     */
     private final DeviceDao deviceDao;
+    /**
+     *  Provides object mapping func
+     */
     private final ModelMapper modelMapper;
+    /**
+     * Provides logging func
+     */
     private final LoggerBean loggerBean;
 
     public StatsServiceImpl(StatsDao statsDao, DeviceDao deviceDao, ModelMapper modelMapper, LoggerBean loggerBean) {
@@ -31,6 +47,11 @@ public class StatsServiceImpl implements StatsService {
         this.loggerBean = loggerBean;
     }
 
+    /**
+     * Processes and stores received iot gateway stats data
+     *
+     * @param stats iot gateway stats data
+     */
     @Override
     public void receive(Stats stats) {
         System.out.println(stats);

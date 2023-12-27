@@ -15,18 +15,41 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/**
+ * Class representing jwt filter that check whether incoming requests contain valid JWT
+ */
 @Component
 // Filters are executed before request are forwarded to servlet
 // OncePerRequest filters are executed only once per each request
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
+    /**
+     * Class implementing DeviceService interface that has logic for accessing iot gateway app/device account data
+     */
     private final DeviceService deviceService;
+    /**
+     * Used for generating new JWTs
+     */
     private JwtUtil jwtUtil;
 
+    /**
+     * Class constructor.
+     * @param deviceService DeviceService implementation
+     * @param jwtUtil JwtUtil object for JWT generation
+     */
     public JwtAuthorizationFilter(DeviceService deviceService, JwtUtil jwtUtil) {
         this.deviceService = deviceService;
         this.jwtUtil = jwtUtil;
     }
 
+    /**
+     * Checks whether incoming HTTP requests contain valid JWT. If they do, account data is fetched from database
+     *
+     * @param request received HTTP request
+     * @param response HTTP response
+     * @param filterChain chain of implicit and user defined filters
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {

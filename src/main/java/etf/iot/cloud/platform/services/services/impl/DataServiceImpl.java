@@ -28,20 +28,59 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of DataService interface
+ *
+ * Provides sensors data processing func
+ */
 @Service
 public class DataServiceImpl implements DataService {
-
+    /**
+     * Dao object for sensor data entities manipulation
+     */
     private final DataDao dataDao;
+    /**
+     * Dao object for stats data entities manipulation
+     */
     private final StatsDao statsDao;
+    /**
+     * Provides object mapping func
+     */
     private final ModelMapper modelMapper;
+    /**
+     * Provides logging func
+     */
     private final LoggerBean loggerBean;
+    /**
+     * Dao object for device's account entities manipulation
+     */
     private final DeviceDao deviceDao;
+    /**
+     * Enables routing MQTT messages to device specific topic
+     */
     private final SimpMessagingTemplate simpMessageTemplate;
+    /**
+     * JSON parser
+     */
     private final Gson gson = new Gson();
     @Value("${history}")
     private String historyInHrs;
+
+    /**
+     * Date format
+     */
     private final DateFormat dateFormater=new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
+    /**
+     * Class constructor
+     *
+     * @param dataDao sensor data dao
+     * @param statsDao stats data dao
+     * @param modelMapper object mapper
+     * @param loggerBean looger object
+     * @param deviceDao device's account dao
+     * @param simpMessageTemplate message forwarder
+     */
     public DataServiceImpl(DataDao dataDao, StatsDao statsDao, ModelMapper modelMapper, LoggerBean loggerBean, DeviceDao deviceDao, SimpMessagingTemplate simpMessageTemplate) {
         this.dataDao = dataDao;
         this.statsDao = statsDao;
@@ -51,6 +90,11 @@ public class DataServiceImpl implements DataService {
         this.simpMessageTemplate = simpMessageTemplate;
     }
 
+    /**
+     * Processes and stores received sensor data
+     *
+     * @param data sensor data object
+     */
     public void receive(Data data) {
         String time = data.getTime();
         data.setTime(null);
@@ -83,6 +127,12 @@ public class DataServiceImpl implements DataService {
         simpMessageTemplate.convertAndSendToUser(device.getUsername(), entity.getType().name().toLowerCase(), gson.toJson(data,Data.class));
     }
 
+    /**
+     * Returns iot gateway's data
+     *
+     * @param id id of iot gateway
+     * @return data received from specified iot gateway
+     */
     @Override
     public DeviceData deviceData(long id) {
         Date date=new Date();

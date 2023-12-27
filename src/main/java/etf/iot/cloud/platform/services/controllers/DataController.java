@@ -13,15 +13,37 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * DataController class represents REST controller that handles HTTP requests regarding sensor data.
+ *
+ * @author Zeljko Tripic
+ * @version 1.0
+ * @since   2023-12-26
+ */
 @RestController
 @RequestMapping("/data")
 public class DataController {
+
+    /**
+     * Class implementing DataService interface contains logic for processing received sensor data
+     */
     private  final DataService dataService;
 
+    /**
+     * Class constructor.
+     *
+     * @param dataService object implementing DataService interface
+     */
     public DataController(DataService dataService) {
         this.dataService = dataService;
     }
 
+    /**
+     * Handles HTTP requests that contain temperature sensor data
+     *
+     * @param data Sensor data provided in HTML request body
+     * @return HTTP status
+     */
     @PostMapping("/temp")
     public ResponseEntity<?> temperature(@RequestBody Data data){
         SecurityContext context = SecurityContextHolder.getContext();
@@ -32,7 +54,12 @@ public class DataController {
         dataService.receive(data);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
+    /**
+     * Handles HTTP requests that contain arm load sensor data
+     *
+     * @param data Sensor data provided in HTML request body
+     * @return HTTP status
+     */
     @PostMapping("/load")
     public ResponseEntity<?> load(@RequestBody Data data){
         SecurityContext context = SecurityContextHolder.getContext();
@@ -43,6 +70,12 @@ public class DataController {
         dataService.receive(data);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    /**
+     * Handles HTTP requests that contain fuel sensor data
+     *
+     * @param data Sensor data provided in HTML request body
+     * @return HTTP status
+     */
     @PostMapping("/fuel")
     public ResponseEntity<?> fuel(@RequestBody Data data){
         SecurityContext context = SecurityContextHolder.getContext();
@@ -53,6 +86,12 @@ public class DataController {
         dataService.receive(data);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    /**
+     * Handles HTTP requests for specific iot gateway app's data
+     *
+     * @return Sensor and stats data of specified iot gateway app.
+     */
     @GetMapping
     public ResponseEntity<DeviceData> deviceData(){
         SecurityContext context = SecurityContextHolder.getContext();

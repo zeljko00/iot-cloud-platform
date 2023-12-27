@@ -1,5 +1,8 @@
 package etf.iot.cloud.platform.services.util;
 
+/**
+ *  Class that contains color values for colored logs
+ */
 public class Constants {
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLACK = "\u001B[30m";

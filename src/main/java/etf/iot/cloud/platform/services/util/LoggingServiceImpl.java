@@ -8,15 +8,31 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Class that implements LoggingService interface and provides logging utility implementation
+ */
 @Service
 public class LoggingServiceImpl implements LoggingService {
-
+    /**
+     * Logger used for logging
+     */
     private final LoggerBean loggerBean;
 
+    /**
+     * Class constructor
+     *
+     * @param loggerBean logger
+     */
     public LoggingServiceImpl(LoggerBean loggerBean) {
         this.loggerBean = loggerBean;
     }
 
+    /**
+     * Extracts parameters from received HTML request
+     *
+     * @param request received HTML request
+     * @return extracted data
+     */
     private Map<String, String> getParameters(HttpServletRequest request) {
         Map<String, String> parameters = new HashMap<>();
         Enumeration<String> params = request.getParameterNames();
@@ -28,6 +44,11 @@ public class LoggingServiceImpl implements LoggingService {
         return parameters;
     }
 
+    /**
+     * Logs received HTTP request
+     *
+     * @param request HTTP request
+     */
     @Override
     public void logRequest(HttpServletRequest request) {
         StringBuilder reqMessage = new StringBuilder();

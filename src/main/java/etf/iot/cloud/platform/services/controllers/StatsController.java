@@ -11,15 +11,35 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * StatsController class represents REST controller that handles HTTP requests regarding iot gateway's stats.
+ *
+ * @author Zeljko Tripic
+ * @version 1.0
+ * @since   2023-12-26
+ */
 @RestController
 @RequestMapping("/stats")
 public class StatsController {
+    /**
+     * StatsService instance contains device's stats handling logic.
+     */
     private final StatsService statsService;
-
+    /**
+     * Class constructor.
+     *
+     * @param statsService Object implementing StatsService interface.
+     */
     public StatsController(StatsService statsService) {
         this.statsService = statsService;
     }
 
+    /**
+     * Handles app's stats requests.
+     *
+     * @param stats Stats object sent in request's body.
+     * @return HTTP status
+     */
     @PostMapping
     public ResponseEntity<?> receive(@RequestBody Stats stats){
         SecurityContext context = SecurityContextHolder.getContext();
