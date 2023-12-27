@@ -82,10 +82,17 @@ public class WebSecurityConfiguration {
                 .addFilter(corsFilter())
                 .csrf(csrf -> csrf.disable())
                 .exceptionHandling(eh -> eh.authenticationEntryPoint(authenticationEntryPoint))
-                .authorizeHttpRequests(ar -> ar.requestMatchers(HttpMethod.GET,"/auth/login").permitAll()
+                .authorizeHttpRequests(ar -> ar
+                        .requestMatchers(HttpMethod.GET,"/v3/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/swagger-ui/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST,"/auth/signup").permitAll()
                         .requestMatchers(HttpMethod.GET,"/ws/**").permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().authenticated()
+
+//                        .requestMatchers("/**").permitAll()
+                )
+
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

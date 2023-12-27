@@ -1,2 +1,5 @@
 Pristup dokumentaciji:
     target/site/index.html
+
+Nakon pokretanja aplikacije API dokumtacija je dostupna na:
+    http://localhost:8080/iot-cloud-platform/swagger-ui/index.html

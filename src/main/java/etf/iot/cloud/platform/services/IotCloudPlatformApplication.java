@@ -10,4 +10,6 @@ public class IotCloudPlatformApplication {
 		SpringApplication.run(IotCloudPlatformApplication.class, args);
 	}
 
+
+
 }
